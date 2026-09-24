@@ -1,0 +1,48 @@
+# Template file for 'sourcegit-bin'
+pkgname=sourcegit-bin
+version=2026.21
+revision=1
+archs="x86_64 aarch64"
+depends="libX11 libICE libSM icu xdg-utils"
+short_desc="Open-source & Free Git GUI Client (official binary)"
+maintainer="Rizal Abdul Basith <rizalabdulbasith@maxxitani.id>"
+license="MIT"
+homepage="https://github.com/sourcegit-scm/sourcegit"
+changelog="https://github.com/sourcegit-scm/sourcegit/releases"
+nopie=yes
+nostrip=yes
+noshlibprovides=yes
+
+_debrev=1
+
+case "$XBPS_TARGET_MACHINE" in
+x86_64)
+	distfiles="https://github.com/sourcegit-scm/sourcegit/releases/download/v${version}/sourcegit_${version}-${_debrev}_amd64.deb
+	 https://raw.githubusercontent.com/sourcegit-scm/sourcegit/v${version}/LICENSE>sourcegit-${version}-LICENSE.txt"
+	checksum="cb7d1ce770d76483c999a9e81c871724ed47f55fa4600f829773485e03a926a6
+	 ec746490472d7ae4317d257df27ea8077f68c6079b07f8ff32ac6ae12db9f32f"
+	;;
+aarch64)
+	distfiles="https://github.com/sourcegit-scm/sourcegit/releases/download/v${version}/sourcegit_${version}-${_debrev}_arm64.deb
+	 https://raw.githubusercontent.com/sourcegit-scm/sourcegit/v${version}/LICENSE>sourcegit-${version}-LICENSE.txt"
+	checksum="957b47a8baa4c6ec98f328da37a7066e8c3d584f6c7b14779d43783b590b11fe
+	 ec746490472d7ae4317d257df27ea8077f68c6079b07f8ff32ac6ae12db9f32f"
+	;;
+esac
+
+do_install() {
+	vmkdir usr/lib/sourcegit-bin
+	vcopy 'opt/sourcegit/*' usr/lib/sourcegit-bin
+
+	vmkdir usr/bin
+	ln -sfr "${DESTDIR}/usr/lib/sourcegit-bin/sourcegit" "${DESTDIR}/usr/bin/sourcegit"
+
+	vinstall usr/share/applications/sourcegit.desktop 644 usr/share/applications
+	vsed -e "s|^Exec=.*|Exec=sourcegit %u|" \
+	     -e "s|^Icon=.*|Icon=sourcegit|" \
+	     -i "${DESTDIR}/usr/share/applications/sourcegit.desktop"
+
+	vinstall usr/share/icons/sourcegit.png 644 usr/share/icons/hicolor/256x256/apps sourcegit.png
+
+	vlicense "sourcegit-${version}-LICENSE.txt" LICENSE
+}

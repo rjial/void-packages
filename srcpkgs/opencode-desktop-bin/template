@@ -1,0 +1,57 @@
+# Template file for 'opencode-desktop-bin'
+pkgname=opencode-desktop-bin
+version=2.0.16
+revision=1
+archs="x86_64 aarch64"
+depends="gtk+3 libnotify nss libXScrnSaver libXtst xdg-utils at-spi2-core
+ libuuid libsecret hicolor-icon-theme desktop-file-utils"
+short_desc="Desktop client for the OpenCode AI coding agent (official binary)"
+maintainer="Rizal Abdul Basith <rizalabdulbasith@maxxitani.id>"
+license="MIT"
+homepage="https://opencode.ai"
+changelog="https://github.com/anomalyco/opencode/releases"
+nopie=yes
+nostrip=yes
+noshlibprovides=yes
+
+case "$XBPS_TARGET_MACHINE" in
+x86_64)
+	distfiles="https://opencode.ai/files/bin/${version}/opencode-desktop-linux-amd64.deb
+	 https://raw.githubusercontent.com/anomalyco/opencode/v${version}/LICENSE>opencode-desktop-${version}-LICENSE.txt"
+	checksum="55d6c0bcbc2a5726aeea4491fd50c37eac5a24828db7f2b4e91d950d3b2f5f71
+	 625f0f619133f89bbbb2abe37369613dfa1885eba1e50d02170deb62bb42cb6b"
+	;;
+aarch64)
+	distfiles="https://opencode.ai/files/bin/${version}/opencode-desktop-linux-arm64.deb
+	 https://raw.githubusercontent.com/anomalyco/opencode/v${version}/LICENSE>opencode-desktop-${version}-LICENSE.txt"
+	checksum="51e080f010709f4168fa82b65f896e2d99474d8e9d9042f0f2a903e4ef61a740
+	 625f0f619133f89bbbb2abe37369613dfa1885eba1e50d02170deb62bb42cb6b"
+	;;
+esac
+
+do_install() {
+	vmkdir usr/lib/opencode-desktop-bin
+	vcopy 'opt/OpenCode/*' usr/lib/opencode-desktop-bin
+
+	# Debian/Ubuntu packaging cruft, irrelevant on Void
+	rm -f "${DESTDIR}/usr/lib/opencode-desktop-bin/resources/apparmor-profile"
+	rm -f "${DESTDIR}/usr/lib/opencode-desktop-bin/resources/app-update.yml"
+
+	vmkdir usr/bin
+	ln -sfr "${DESTDIR}/usr/lib/opencode-desktop-bin/ai.opencode.desktop" \
+		"${DESTDIR}/usr/bin/opencode-desktop"
+
+	vinstall usr/share/applications/ai.opencode.desktop.desktop 644 \
+		usr/share/applications opencode-desktop.desktop
+	vsed -e "s|^Exec=.*|Exec=opencode-desktop %U|" \
+	     -e "s|^Icon=.*|Icon=opencode-desktop|" \
+	     -i "${DESTDIR}/usr/share/applications/opencode-desktop.desktop"
+
+	local size
+	for size in 32 64 128; do
+		vinstall "usr/share/icons/hicolor/${size}x${size}/apps/ai.opencode.desktop.png" 644 \
+			"usr/share/icons/hicolor/${size}x${size}/apps" opencode-desktop.png
+	done
+
+	vlicense "opencode-desktop-${version}-LICENSE.txt" LICENSE
+}
