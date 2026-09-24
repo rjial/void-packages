@@ -10,6 +10,26 @@ or queried through the `xbps-install(1)` and `xbps-query(1)` utilities, respecti
 See [Contributing](./CONTRIBUTING.md) for a general overview of how to contribute and the
 [Manual](./Manual.md) for details of how to create source packages.
 
+### Packages added in this fork
+
+This fork adds a few `-bin` packages that repackage each project's official prebuilt
+Linux release instead of building from source. They are not present in upstream
+`void-linux/void-packages`.
+
+| Package | Description | License | Notes |
+| --- | --- | --- | --- |
+| [`vscode-bin`](./srcpkgs/vscode-bin/template) | Visual Studio Code, Microsoft's official binary build | Proprietary (`restricted=yes`, `repository=nonfree`) | Distinct from the existing [`vscode`](./srcpkgs/vscode/template) package, which builds the MIT-licensed `code-oss` from source; installs as `/usr/bin/code`, does not conflict with `code-oss` |
+| [`sourcegit-bin`](./srcpkgs/sourcegit-bin/template) | SourceGit, a Git GUI client | MIT | Repackages the official `.deb` release |
+| [`opencode-desktop-bin`](./srcpkgs/opencode-desktop-bin/template) | Desktop client for the OpenCode AI coding agent | MIT | Repackages the official `.deb` release with its bundled Electron runtime |
+| [`pear-desktop-bin`](./srcpkgs/pear-desktop-bin/template) | Pear, a YouTube Music desktop app with custom plugins | MIT | Repackages the official Linux tarball release |
+
+Build and install any of them the same way as any other package, e.g.:
+
+```
+./xbps-src pkg vscode-bin
+sudo xbps-install --repository=hostdir/binpkgs --repository=hostdir/binpkgs/nonfree -y vscode-bin
+```
+
 ### Table of Contents
 
 - [Requirements](#requirements)
