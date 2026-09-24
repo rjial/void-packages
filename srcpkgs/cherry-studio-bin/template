@@ -1,0 +1,75 @@
+# Template file for 'cherry-studio-bin'
+pkgname=cherry-studio-bin
+version=2.1.3
+revision=1
+archs="x86_64 aarch64"
+depends="gtk+3 libnotify nss libXScrnSaver libXtst xdg-utils at-spi2-core
+ libuuid libsecret hicolor-icon-theme desktop-file-utils"
+short_desc="Desktop client for multiple LLM providers (official binary)"
+maintainer="Rizal Abdul Basith <rizalabdulbasith@maxxitani.id>"
+license="AGPL-3.0-or-later"
+homepage="https://github.com/CherryHQ/cherry-studio"
+changelog="https://github.com/CherryHQ/cherry-studio/releases"
+nopie=yes
+nostrip=yes
+noshlibprovides=yes
+
+case "$XBPS_TARGET_MACHINE" in
+x86_64)
+	distfiles="https://github.com/CherryHQ/cherry-studio/releases/download/v${version}/Cherry-Studio-${version}-linux-x64.deb
+	 https://raw.githubusercontent.com/CherryHQ/cherry-studio/v${version}/LICENSE>cherry-studio-${version}-LICENSE.txt"
+	checksum="4ca8c476e018993d41b0e753102e034c2657e7e330e86200eb630e2fdd0d17f5
+	 0d96a4ff68ad6d4b6f1f30f713b18d5184912ba8dd389f86aa7710db079abcb0"
+	;;
+aarch64)
+	distfiles="https://github.com/CherryHQ/cherry-studio/releases/download/v${version}/Cherry-Studio-${version}-linux-arm64.deb
+	 https://raw.githubusercontent.com/CherryHQ/cherry-studio/v${version}/LICENSE>cherry-studio-${version}-LICENSE.txt"
+	checksum="224cbe16a1a5de30384030ad5604055de53734b7a9b8e2b7739eaf9351411994
+	 0d96a4ff68ad6d4b6f1f30f713b18d5184912ba8dd389f86aa7710db079abcb0"
+	;;
+esac
+
+do_install() {
+	local size f _wantarch
+
+	# the deb ships the app under "opt/Cherry Studio" (with a space);
+	# rename it so vcopy's unquoted globbing doesn't split the path
+	mv "opt/Cherry Studio" opt/cherry-studio
+
+	vmkdir usr/lib/cherry-studio-bin
+	vcopy 'opt/cherry-studio/*' usr/lib/cherry-studio-bin
+
+	# The bundled node_modules ship prebuilt native addons for every
+	# OS/arch/libc combination upstream targets (darwin, win32, musl,
+	# the other CPU arch, ...). Strip everything that isn't a Linux/glibc
+	# ELF for the arch we're building, otherwise xbps-src's shlib scanner
+	# chokes on the foreign ones.
+	case "$XBPS_TARGET_MACHINE" in
+		x86_64) _wantarch="x86-64";;
+		aarch64) _wantarch="ARM aarch64";;
+	esac
+	while IFS= read -r -d '' f; do
+		case "$(file -b "$f")" in
+			*"ELF 64-bit"*"$_wantarch"*) ;;
+			*) rm -f "$f"; continue ;;
+		esac
+		readelf -d "$f" 2>/dev/null | grep -q musl && rm -f "$f"
+	done < <(find "${DESTDIR}/usr/lib/cherry-studio-bin" \( -name '*.node' -o -name '*.so*' \) -print0)
+
+	vmkdir usr/bin
+	ln -sfr "${DESTDIR}/usr/lib/cherry-studio-bin/CherryStudio" \
+		"${DESTDIR}/usr/bin/cherry-studio"
+
+	vinstall usr/share/applications/CherryStudio.desktop 644 \
+		usr/share/applications cherry-studio.desktop
+	vsed -e 's|^Exec=.*|Exec=cherry-studio %U|' \
+	     -e 's|^Icon=.*|Icon=cherry-studio|' \
+	     -i "${DESTDIR}/usr/share/applications/cherry-studio.desktop"
+
+	for size in 16 24 32 48 64 128 256 512 1024; do
+		vinstall "usr/share/icons/hicolor/${size}x${size}/apps/CherryStudio.png" 644 \
+			"usr/share/icons/hicolor/${size}x${size}/apps" cherry-studio.png
+	done
+
+	vlicense "cherry-studio-${version}-LICENSE.txt" LICENSE
+}
