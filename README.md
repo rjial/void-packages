@@ -22,13 +22,37 @@ Linux release instead of building from source. They are not present in upstream
 | [`sourcegit-bin`](./srcpkgs/sourcegit-bin/template) | SourceGit, a Git GUI client | MIT | Repackages the official `.deb` release |
 | [`opencode-desktop-bin`](./srcpkgs/opencode-desktop-bin/template) | Desktop client for the OpenCode AI coding agent | MIT | Repackages the official `.deb` release with its bundled Electron runtime |
 | [`pear-desktop-bin`](./srcpkgs/pear-desktop-bin/template) | Pear, a YouTube Music desktop app with custom plugins | MIT | Repackages the official Linux tarball release |
+| [`cherry-studio-bin`](./srcpkgs/cherry-studio-bin/template) | Cherry Studio, a desktop client for multiple LLM providers | AGPL-3.0-or-later | Repackages the official `.deb` release; strips prebuilt native modules shipped for other OSes/archs/libcs |
 
-Build and install any of them the same way as any other package, e.g.:
+#### Building and installing
+
+Build any of them the same way as any other package, e.g.:
 
 ```
-./xbps-src pkg vscode-bin
-sudo xbps-install --repository=hostdir/binpkgs --repository=hostdir/binpkgs/nonfree -y vscode-bin
+./xbps-src pkg cherry-studio-bin
 ```
+
+The resulting `.xbps` binary package is written under `hostdir/binpkgs`. Note that
+`xbps-src` nests that directory under a subdirectory named after the current Git
+branch whenever you're not on `master` (this is `xbps-src`'s own
+`XBPS_ALT_REPOSITORY` behavior) — check exactly where a build landed with:
+
+```
+./xbps-src show-var XBPS_REPOSITORY
+```
+
+`restricted`/`nonfree` packages (currently only `vscode-bin`) additionally land in
+that repository's `nonfree` subdirectory. The safest way to install any of them,
+regardless of branch, is to point `xbps-install` at both locations:
+
+```
+sudo xbps-install \
+  --repository="$(./xbps-src show-var XBPS_REPOSITORY)" \
+  --repository="$(./xbps-src show-var XBPS_REPOSITORY)/nonfree" \
+  -y cherry-studio-bin sourcegit-bin opencode-desktop-bin pear-desktop-bin vscode-bin
+```
+
+(list only the package names you actually want to install)
 
 ### Table of Contents
 
