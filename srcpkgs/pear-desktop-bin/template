@@ -1,0 +1,49 @@
+# Template file for 'pear-desktop-bin'
+pkgname=pear-desktop-bin
+version=3.12.0
+revision=1
+archs="x86_64 aarch64"
+depends="gtk+3 libsecret nss libnotify libXScrnSaver xdg-utils
+ hicolor-icon-theme desktop-file-utils"
+short_desc="YouTube Music desktop app with custom plugins (official binary)"
+maintainer="Rizal Abdul Basith <rizalabdulbasith@maxxitani.id>"
+license="MIT"
+homepage="https://github.com/pear-devs/pear-desktop"
+changelog="https://github.com/pear-devs/pear-desktop/releases"
+nopie=yes
+nostrip=yes
+noshlibprovides=yes
+
+case "$XBPS_TARGET_MACHINE" in
+x86_64)
+	distfiles="https://github.com/pear-devs/pear-desktop/releases/download/v${version}/youtube-music-${version}.tar.gz
+	 https://github.com/pear-devs/pear-desktop/raw/v${version}/license>pear-desktop-${version}-LICENSE.txt"
+	checksum="02e3cfc06803869fc49949f90208cebac6dd5a20d9d456b5b1a5e851ae244ca8
+	 abc6a246b20c0106c9bbe9c31e65f10f5e2b2d28d7a72349b4f5095e86c22524"
+	;;
+aarch64)
+	distfiles="https://github.com/pear-devs/pear-desktop/releases/download/v${version}/youtube-music-${version}-arm64.tar.gz
+	 https://github.com/pear-devs/pear-desktop/raw/v${version}/license>pear-desktop-${version}-LICENSE.txt"
+	checksum="c0ebd92467140a94edb5dd52ed51840ae7d294b3d555028db3acb7a2da03ce93
+	 abc6a246b20c0106c9bbe9c31e65f10f5e2b2d28d7a72349b4f5095e86c22524"
+	;;
+esac
+
+do_install() {
+	local size _srcdir="youtube-music-${version}"
+
+	vmkdir usr/lib/pear-desktop-bin
+	vcopy "${_srcdir}/*" usr/lib/pear-desktop-bin
+
+	vmkdir usr/bin
+	ln -sfr "${DESTDIR}/usr/lib/pear-desktop-bin/youtube-music" "${DESTDIR}/usr/bin/youtube-music"
+
+	vinstall "${FILESDIR}/pear-desktop.desktop" 644 usr/share/applications
+
+	for size in 16 24 32 48 64 128 256 512 1024; do
+		vinstall "${_srcdir}/resources/app.asar.unpacked/assets/generated/icons/png/${size}x${size}.png" 644 \
+			"usr/share/icons/hicolor/${size}x${size}/apps" pear-desktop.png
+	done
+
+	vlicense "pear-desktop-${version}-LICENSE.txt" LICENSE
+}

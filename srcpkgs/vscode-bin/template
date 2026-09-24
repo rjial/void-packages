@@ -1,0 +1,43 @@
+# Template file for 'vscode-bin'
+pkgname=vscode-bin
+version=1.139.0
+revision=1
+archs="x86_64 aarch64"
+depends="alsa-lib gtk+3 gnupg libnotify libsecret libxkbfile libXScrnSaver
+ lsof nss shared-mime-info xdg-utils hicolor-icon-theme desktop-file-utils"
+short_desc="Visual Studio Code (official binary build)"
+maintainer="Rizal Abdul Basith <rizalabdulbasith@maxxitani.id>"
+license="custom:Proprietary"
+homepage="https://code.visualstudio.com/"
+nopie=yes
+nostrip=yes
+noshlibprovides=yes
+restricted=yes
+repository=nonfree
+
+case "$XBPS_TARGET_MACHINE" in
+x86_64)
+	distfiles="https://update.code.visualstudio.com/${version}/linux-x64/stable>vscode-bin-${version}_x64.tar.gz"
+	checksum=ef18461d14d658255917ea978cdccb20576f797af8d9f6062e6ac5afa9f5ec51
+	;;
+aarch64)
+	distfiles="https://update.code.visualstudio.com/${version}/linux-arm64/stable>vscode-bin-${version}_arm64.tar.gz"
+	checksum=7a8dfc162a670478d4d699e67c5a0172ffa2f8b23e42e46026a32a4546f57c9a
+	;;
+esac
+
+do_install() {
+	vmkdir usr/lib/vscode-bin
+	vcopy '*' usr/lib/vscode-bin
+
+	vmkdir usr/bin
+	ln -sfr "${DESTDIR}/usr/lib/vscode-bin/bin/code" "${DESTDIR}/usr/bin/code"
+
+	vinstall "${FILESDIR}/code.desktop" 644 usr/share/applications
+
+	vmkdir usr/share/pixmaps
+	ln -sfr "${DESTDIR}/usr/lib/vscode-bin/resources/app/resources/linux/code.png" \
+		"${DESTDIR}/usr/share/pixmaps/code.png"
+
+	vlicense resources/app/LICENSE.rtf
+}
