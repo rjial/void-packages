@@ -151,6 +151,28 @@ PACKAGES = {
         "latest_version": lambda: latest_github_tag("ryanoasis/nerd-fonts"),
         "assets": None,
     },
+    "zed": {
+        "restricted": False,
+        "latest_version": lambda: latest_github_tag("zed-industries/zed"),
+        "assets": lambda v: {
+            "x86_64": [f"https://github.com/zed-industries/zed/releases/download/v{v}/zed-linux-x86_64.tar.gz"],
+            "aarch64": [f"https://github.com/zed-industries/zed/releases/download/v{v}/zed-linux-aarch64.tar.gz"],
+        },
+    },
+    "helium-bin": {
+        "restricted": False,
+        "latest_version": lambda: latest_github_tag("imputnet/helium-linux"),
+        "assets": lambda v: {
+            "x86_64": [
+                f"https://github.com/imputnet/helium-linux/releases/download/{v}/helium-bin_{v}-1_amd64.deb",
+                f"https://raw.githubusercontent.com/imputnet/helium-linux/{v}/LICENSE.ungoogled_chromium",
+            ],
+            "aarch64": [
+                f"https://github.com/imputnet/helium-linux/releases/download/{v}/helium-bin_{v}-1_arm64.deb",
+                f"https://raw.githubusercontent.com/imputnet/helium-linux/{v}/LICENSE.ungoogled_chromium",
+            ],
+        },
+    },
 }
 
 
