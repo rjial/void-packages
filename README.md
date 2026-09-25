@@ -26,6 +26,7 @@ release instead of building from source. They are not present in upstream
 | [`claude-desktop`](./srcpkgs/claude-desktop/template) | Official Claude AI desktop app from Anthropic | Proprietary (`restricted=yes`, `repository=nonfree`) | Repackages the official `.deb` release; ships a launcher that picks the Wayland Ozone backend automatically, and adds path shims (`edk2-ovmf`, `virtiofsd`) for the Cowork sandboxed-VM feature — those shims were verified to point at real files but the Cowork VM flow itself was not run end-to-end |
 | [`nerd-fonts-sf-mono`](./srcpkgs/nerd-fonts-sf-mono/template) | Apple's SF Mono font, patched with the Nerd Fonts patcher | Proprietary (`restricted=yes`, `repository=nonfree`) | **Local use only, not for redistribution.** Downloads Apple's font installer directly from `developer.apple.com` and patches it at build time; Apple's font terms do not clearly permit redistributing the font (modified or not) outside Apple's own platforms, unlike the vendor-distributed binaries above. Only the monospace family is packaged, not the full `nerd-fonts-apple` AUR bundle (SF Pro/Compact/Arabic, NY) |
 | [`zed`](./srcpkgs/zed/template) | Zed, a high-performance multiplayer code editor | GPL-3.0-or-later, AGPL-3.0-or-later, Apache-2.0 | Repackages the official Linux tarball release; uses system libraries instead of the ones bundled in the tarball (`libglvnd`, `vulkan-loader`, etc., all already packaged in Void — bundling them caused `mesa` to be pulled in as a `depends` and rebuilt from source); the `zed` command is a small wrapper that disables Zed's self-updater so upgrades only happen via `xbps-install -u` |
+| [`helium-bin`](./srcpkgs/helium-bin/template) | Helium, a privacy-first Chromium-based web browser | GPL-3.0-only, BSD-3-Clause | Repackages the official `.deb` release, installed to `/opt/helium` (matching [Ars-byte/Helium_xbps](https://github.com/Ars-byte/Helium_xbps)); trims `chromedriver`, non-English locales, and the software Vulkan fallback to save space; installs an AppArmor profile via `INSTALL`/`REMOVE` scripts when `apparmor` is present. The bundled Qt theming shims are excluded from automatic dependency detection (`skiprdeps`) so they don't drag in the full Qt5/Qt6 stacks as hard dependencies |
 
 #### Building and installing
 
@@ -53,7 +54,7 @@ locations:
 sudo xbps-install \
   --repository="$(./xbps-src show-var XBPS_REPOSITORY)" \
   --repository="$(./xbps-src show-var XBPS_REPOSITORY)/nonfree" \
-  -y cherry-studio-bin sourcegit-bin opencode-desktop-bin pear-desktop-bin vscode-bin claude-desktop nerd-fonts-sf-mono zed
+  -y cherry-studio-bin sourcegit-bin opencode-desktop-bin pear-desktop-bin vscode-bin claude-desktop nerd-fonts-sf-mono zed helium-bin
 ```
 
 (list only the package names you actually want to install)
