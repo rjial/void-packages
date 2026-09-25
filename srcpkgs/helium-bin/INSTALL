@@ -1,0 +1,9 @@
+# INSTALL
+case "${ACTION}" in
+post)
+	if command -v apparmor_parser >/dev/null 2>&1 && [ -d etc/apparmor.d ]; then
+		cp opt/helium/apparmor.cfg etc/apparmor.d/helium-bin
+		apparmor_parser -r -W -T etc/apparmor.d/helium-bin || true
+	fi
+	;;
+esac

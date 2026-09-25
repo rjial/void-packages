@@ -1,0 +1,9 @@
+# REMOVE
+case "${ACTION}" in
+post)
+	if [ -f etc/apparmor.d/helium-bin ]; then
+		command -v apparmor_parser >/dev/null 2>&1 && apparmor_parser -R etc/apparmor.d/helium-bin || true
+		rm -f etc/apparmor.d/helium-bin
+	fi
+	;;
+esac
