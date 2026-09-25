@@ -1,0 +1,44 @@
+# Template file for 'zed'
+pkgname=zed
+version=1.21.0
+revision=1
+archs="x86_64 aarch64"
+depends="alsa-lib glib libX11 libxcb libxkbcommon libxkbcommon-x11 wayland
+ zlib libglvnd vulkan-loader hicolor-icon-theme desktop-file-utils"
+short_desc="High-performance, multiplayer code editor from the creators of Atom"
+maintainer="Rizal Abdul Basith <rizalabdulbasith@maxxitani.id>"
+license="GPL-3.0-or-later, AGPL-3.0-or-later, Apache-2.0"
+homepage="https://zed.dev"
+changelog="https://github.com/zed-industries/zed/releases"
+
+case "$XBPS_TARGET_MACHINE" in
+x86_64)
+	distfiles="https://github.com/zed-industries/zed/releases/download/v${version}/zed-linux-x86_64.tar.gz"
+	checksum=b79a992e960ed4067cb2b50d66789ed8618eeb1780ed6a0f8f1e71dd80f74200
+	;;
+aarch64)
+	distfiles="https://github.com/zed-industries/zed/releases/download/v${version}/zed-linux-aarch64.tar.gz"
+	checksum=69eff51b22203be7a4d0fd9df0864a8abd4d5183e8fb9aafa2af57f3cd42b9a3
+	;;
+esac
+
+do_install() {
+	vmkdir usr/lib/zed
+	vinstall libexec/zed-editor 755 usr/lib/zed
+
+	# bin/zed (the CLI) resolves the editor binary at usr/lib/zed/zed-editor
+	# relative to its own location; install it as zed.real and put a
+	# wrapper that disables its self-updater at the "zed" name instead
+	vinstall bin/zed 755 usr/bin zed.real
+	vinstall "${FILESDIR}/zed.sh" 755 usr/bin zed
+
+	vinstall share/applications/dev.zed.Zed.desktop 644 usr/share/applications
+
+	local size
+	for size in 512 1024; do
+		vinstall "share/icons/hicolor/${size}x${size}/apps/zed.png" 644 \
+			"usr/share/icons/hicolor/${size}x${size}/apps"
+	done
+
+	vlicense licenses.md
+}
