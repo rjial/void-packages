@@ -1,0 +1,146 @@
+name: Update bin packages
+
+# Weekly check for new upstream releases of this fork's hand-packaged
+# binary templates (see .github/scripts/update_bin_packages.py). When a
+# newer version is found:
+#   - the template's version=/checksum= is bumped and committed directly
+#   - it is built for x86_64 and aarch64 using the official Void container
+#   - open-license packages (MIT/AGPL) additionally get their .xbps files
+#     published to a GitHub Release
+#   - proprietary/restricted packages (vscode-bin, claude-desktop,
+#     nerd-fonts-sf-mono) are only built as a "does the template still
+#     work" check; nothing is uploaded or published for them, since their
+#     upstream license does not permit redistributing the binary/font
+#
+# NOTE: scheduled triggers only ever run from the default branch's copy
+# of this workflow. If these packages live on a non-default branch of
+# this fork, merge that branch into the default branch first, otherwise
+# the cron schedule below will silently never fire (use "Run workflow"
+# in the Actions tab to test manually from any branch in the meantime).
+
+on:
+  schedule:
+    - cron: '0 3 * * 1' # every Monday at 03:00 UTC
+  workflow_dispatch: {}
+
+concurrency:
+  group: update-bin-packages
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  bump:
+    name: Check upstream versions
+    runs-on: ubuntu-latest
+    outputs:
+      open: ${{ steps.bump.outputs.open }}
+      restricted: ${{ steps.bump.outputs.restricted }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - id: bump
+        run: |
+          set -euo pipefail
+          python3 .github/scripts/update_bin_packages.py bump-all
+
+          if [ -n "$(git status --porcelain srcpkgs/)" ]; then
+            bumped=$(git status --porcelain srcpkgs/ | awk '{print $2}' | cut -d/ -f2 | paste -sd ' ')
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            git add srcpkgs/
+            git commit -m "bin packages: bump $bumped"
+            git push origin HEAD
+          fi
+
+  build-open:
+    name: Build & release ${{ matrix.pkgname }}
+    needs: bump
+    if: needs.bump.outputs.open != '[]'
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        pkgname: ${{ fromJson(needs.bump.outputs.open) }}
+    container:
+      image: ghcr.io/void-linux/void-glibc-full
+      options: --privileged
+      volumes:
+        - /dev:/dev
+    steps:
+      - name: Prepare container
+        run: |
+          mkdir -p /etc/xbps.d && cp /usr/share/xbps.d/*-repository-*.conf /etc/xbps.d/
+          xbps-install -Syu xbps && xbps-install -yu && xbps-install -y sudo bash curl git jq
+          useradd -G xbuilder -M builder
+
+      - uses: classabbyamp/treeless-checkout-action@v1
+
+      - name: Prepare masterdir
+        run: |
+          chown -R builder:builder .
+          sudo -Eu builder ./xbps-src binary-bootstrap
+
+      - name: Build (x86_64 + aarch64)
+        run: |
+          sudo -Eu builder ./xbps-src pkg "${{ matrix.pkgname }}"
+          sudo -Eu builder ./xbps-src -a aarch64 pkg "${{ matrix.pkgname }}"
+
+      - name: Collect built packages
+        id: files
+        run: |
+          repo="$(sudo -Eu builder ./xbps-src show-var XBPS_REPOSITORY)"
+          version="$(sed -n 's/^version=//p' "srcpkgs/${{ matrix.pkgname }}/template" | head -1)"
+          mkdir -p /tmp/out
+          find "$repo" -name "${{ matrix.pkgname }}-${version}_*.*.xbps" -exec cp {} /tmp/out/ \;
+          ls -la /tmp/out
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+
+      - name: Publish release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ matrix.pkgname }}-${{ steps.files.outputs.version }}
+          name: ${{ matrix.pkgname }} ${{ steps.files.outputs.version }}
+          files: /tmp/out/*.xbps
+          fail_on_unmatched_files: true
+
+  build-restricted:
+    name: Build (validate only) ${{ matrix.pkgname }}
+    needs: bump
+    if: needs.bump.outputs.restricted != '[]'
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        pkgname: ${{ fromJson(needs.bump.outputs.restricted) }}
+    container:
+      image: ghcr.io/void-linux/void-glibc-full
+      options: --privileged
+      volumes:
+        - /dev:/dev
+    steps:
+      - name: Prepare container
+        run: |
+          mkdir -p /etc/xbps.d && cp /usr/share/xbps.d/*-repository-*.conf /etc/xbps.d/
+          xbps-install -Syu xbps && xbps-install -yu && xbps-install -y sudo bash curl git
+          useradd -G xbuilder -M builder
+
+      - uses: classabbyamp/treeless-checkout-action@v1
+
+      - name: Prepare masterdir
+        run: |
+          chown -R builder:builder .
+          # restricted packages refuse to build without this (see README.md
+          # "Quick start"); etc/conf is gitignored, so it never exists on a
+          # fresh checkout
+          echo "XBPS_ALLOW_RESTRICTED=yes" | sudo -Eu builder tee etc/conf
+          sudo -Eu builder ./xbps-src binary-bootstrap
+
+      # Builds only, to catch upstream breakage. Nothing here is uploaded,
+      # released, or otherwise persisted past this job: this package's
+      # license does not permit redistributing the resulting binary.
+      - name: Build (x86_64 + aarch64)
+        run: |
+          sudo -Eu builder ./xbps-src pkg "${{ matrix.pkgname }}"
+          sudo -Eu builder ./xbps-src -a aarch64 pkg "${{ matrix.pkgname }}"
