@@ -1,0 +1,63 @@
+# Template file for 'nerd-fonts-sf-mono'
+#
+# Repackages Apple's official SF Mono font, patched with the Nerd Fonts
+# patcher to add the usual glyph set (Devicons, Powerline, etc).
+#
+# Apple's font license does not permit unrestricted redistribution or
+# modification, so this package is restricted (nonfree, and never built
+# by the official Void builders) and is meant for local use only.
+pkgname=nerd-fonts-sf-mono
+version=3.5.1
+revision=1
+hostmakedepends="p7zip xar fontforge"
+depends="font-util"
+short_desc="Apple's SF Mono font, patched with the Nerd Fonts patcher"
+maintainer="Rizal Abdul Basith <rizalabdulbasith@maxxitani.id>"
+license="custom:Proprietary"
+homepage="https://developer.apple.com/fonts/"
+font_dirs="/usr/share/fonts/nerd-fonts-sf-mono"
+nostrip=yes
+restricted=yes
+repository=nonfree
+
+distfiles="https://devimages-cdn.apple.com/design/resources/download/SF-Mono.dmg
+ https://github.com/ryanoasis/nerd-fonts/releases/download/v${version}/FontPatcher.zip"
+checksum="6d4a0b78e3aacd06f913f642cead1c7db4af34ed48856d7171a2e0b55d9a7945
+ 42bcb32145499a35732274c7fc48deb434ad0d2e0e118f98527c1479c6fa251a"
+
+# xbps-src's distfile extractor has no .dmg handler; fetch it verbatim
+# and unpack it ourselves in do_build with 7z.
+skip_extraction="SF-Mono.dmg"
+
+post_extract() {
+	vsrccopy SF-Mono.dmg "${wrksrc}"
+}
+
+do_build() {
+	# 7z extracts the DMG's HFS+ volume into "SFMonoFonts/" (its volume
+	# label), which contains the macOS installer package (xar format).
+	local voldir=SFMonoFonts
+
+	7z x -bd -y SF-Mono.dmg >/dev/null
+	cd "${voldir}"
+	xar -xf *.pkg
+	# it's a "distribution" package: the outer .pkg wraps a component
+	# package directory holding the real payload
+	bsdtar xf */Payload
+	cd ..
+
+	mkdir -p patched
+	find "${voldir}" \( -iname '*.ttf' -o -iname '*.otf' \) -print0 | \
+		xargs -0 -P "${XBPS_MAKEJOBS#-j}" -n1 -I{} \
+		fontforge -script font-patcher -q -c -s {} -out patched
+}
+
+do_install() {
+	vmkdir usr/share/fonts/nerd-fonts-sf-mono
+	local f
+	for f in patched/*.otf; do
+		vinstall "${f}" 644 usr/share/fonts/nerd-fonts-sf-mono
+	done
+
+	vlicense "${FILESDIR}/LICENSE"
+}

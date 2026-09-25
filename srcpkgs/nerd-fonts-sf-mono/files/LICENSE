@@ -1,0 +1,14 @@
+This package repackages Apple's SF Mono font (downloaded from
+https://developer.apple.com/fonts/), patched with the Nerd Fonts patcher
+(https://github.com/ryanoasis/nerd-fonts, MIT-licensed) to add extra glyphs.
+
+Apple does not publish a plain-text license file inside the font
+installer; the applicable terms are the ones presented on the download
+page above at the time of download. Those terms do not clearly permit
+redistribution of the font, modified or not, outside of software built
+for Apple's own platforms. This package is marked "restricted" for that
+reason: the official Void Linux builders will refuse to build it, and
+it is intended for local, personal use only, not for redistribution.
+
+The Nerd Fonts patcher itself is MIT-licensed; see
+https://github.com/ryanoasis/nerd-fonts/blob/master/LICENSE.
