@@ -1,0 +1,49 @@
+# Template file for 'jdk17-temurin'
+pkgname=jdk17-temurin
+version=17.0.20.1+1
+revision=1
+archs="x86_64 aarch64"
+_javaver="${version%%.*}"
+_jdk_home="usr/lib/jvm/temurin-${_javaver}"
+depends="openjdk-common fontconfig"
+short_desc="Temurin ${_javaver} (OpenJDK ${_javaver} binaries by Eclipse Adoptium)"
+maintainer="Rizal Abdul Basith <rizalabdulbasith@maxxitani.id>"
+license="GPL-2.0-only WITH Classpath-exception-2.0"
+homepage="https://adoptium.net/"
+changelog="https://github.com/adoptium/temurin${_javaver}-binaries/releases"
+alternatives="jdk:/usr/lib/jvm/default-jdk:/${_jdk_home}
+ java:/usr/lib/jvm/default-jre:/${_jdk_home}"
+provides="java-environment-${version}_1 java-runtime-${version}_1"
+nostrip=yes
+noshlibprovides=yes
+
+_tagver="${version/+/%2B}"
+_fname_ver="${version/+/_}"
+case "$XBPS_TARGET_MACHINE" in
+x86_64)
+	distfiles="https://github.com/adoptium/temurin${_javaver}-binaries/releases/download/jdk-${_tagver}/OpenJDK${_javaver}U-jdk_x64_linux_hotspot_${_fname_ver}.tar.gz"
+	checksum=3808d1d15e3ec6bd5b84057fb5d84c33d8a1536a258146bcea2e603fc726e08e
+	;;
+aarch64)
+	distfiles="https://github.com/adoptium/temurin${_javaver}-binaries/releases/download/jdk-${_tagver}/OpenJDK${_javaver}U-jdk_aarch64_linux_hotspot_${_fname_ver}.tar.gz"
+	checksum=457b57af8f9c93ec39080bb8c764f559dc8c89a6da1a39d718a400b7890d3e41
+	;;
+esac
+
+do_install() {
+	vmkdir ${_jdk_home}
+	vcopy 'bin' ${_jdk_home}
+	vcopy 'conf' ${_jdk_home}
+	vcopy 'include' ${_jdk_home}
+	vcopy 'jmods' ${_jdk_home}
+	vcopy 'lib' ${_jdk_home}
+	vcopy 'man' ${_jdk_home}
+	vcopy 'release' ${_jdk_home}
+
+	vmkdir ${_jdk_home}/lib/security
+	ln -fs /etc/ssl/certs/java/cacerts "${DESTDIR}/${_jdk_home}/lib/security"
+
+	vmkdir "usr/share/licenses/${pkgname}"
+	vcopy 'legal/*' "usr/share/licenses/${pkgname}"
+	vlicense NOTICE
+}
