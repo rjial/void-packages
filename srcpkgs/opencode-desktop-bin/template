@@ -18,12 +18,14 @@ case "$XBPS_TARGET_MACHINE" in
 x86_64)
 	distfiles="https://opencode.ai/files/bin/${version}/opencode-desktop-linux-amd64.deb
 	 https://raw.githubusercontent.com/anomalyco/opencode/v${version}/LICENSE>opencode-desktop-${version}-LICENSE.txt"
-	checksum=0b6a7f7bd4cbd2259fd556cfc8d5599b3eff0549b6a79ba0af5e1c880f3ee42f
+	checksum="0b6a7f7bd4cbd2259fd556cfc8d5599b3eff0549b6a79ba0af5e1c880f3ee42f
+	 625f0f619133f89bbbb2abe37369613dfa1885eba1e50d02170deb62bb42cb6b"
 	;;
 aarch64)
 	distfiles="https://opencode.ai/files/bin/${version}/opencode-desktop-linux-arm64.deb
 	 https://raw.githubusercontent.com/anomalyco/opencode/v${version}/LICENSE>opencode-desktop-${version}-LICENSE.txt"
-	checksum=0aafa8580acf6e545a8dba4b8142cede1bba8473844bcd55f2d336187c5f8785
+	checksum="0aafa8580acf6e545a8dba4b8142cede1bba8473844bcd55f2d336187c5f8785
+	 625f0f619133f89bbbb2abe37369613dfa1885eba1e50d02170deb62bb42cb6b"
 	;;
 esac
 
