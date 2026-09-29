@@ -99,8 +99,14 @@ PACKAGES = {
             "version"
         ],
         "assets": lambda v: {
-            "x86_64": [f"https://opencode.ai/files/bin/{v}/opencode-desktop-linux-amd64.deb"],
-            "aarch64": [f"https://opencode.ai/files/bin/{v}/opencode-desktop-linux-arm64.deb"],
+            "x86_64": [
+                f"https://opencode.ai/files/bin/{v}/opencode-desktop-linux-amd64.deb",
+                f"https://raw.githubusercontent.com/anomalyco/opencode/v{v}/LICENSE",
+            ],
+            "aarch64": [
+                f"https://opencode.ai/files/bin/{v}/opencode-desktop-linux-arm64.deb",
+                f"https://raw.githubusercontent.com/anomalyco/opencode/v{v}/LICENSE",
+            ],
         },
     },
     "pear-desktop-bin": {
