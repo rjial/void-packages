@@ -1,0 +1,35 @@
+# Template file for 'ast-grep-bin'
+pkgname=ast-grep-bin
+version=0.45.3
+revision=1
+archs="x86_64 aarch64"
+short_desc="Fast and polyglot tool for code searching, linting, and rewriting (official binary)"
+maintainer="Rizal Abdul Basith <rizalabdulbasith@maxxitani.id>"
+license="MIT"
+homepage="https://ast-grep.github.io"
+changelog="https://raw.githubusercontent.com/ast-grep/ast-grep/main/CHANGELOG.md"
+conflicts="ast-grep>=0"
+provides="ast-grep-${version}_${revision}"
+nostrip=yes
+
+_license_commit="c9aff6ace291c5a02e48446aa9be1d471b763ca2"
+
+case "$XBPS_TARGET_MACHINE" in
+x86_64)
+	distfiles="https://github.com/ast-grep/ast-grep/releases/download/${version}/app-x86_64-unknown-linux-gnu.zip
+	 https://raw.githubusercontent.com/ast-grep/ast-grep/${_license_commit}/LICENSE>ast-grep-bin-${version}-LICENSE.txt"
+	checksum="f8ac830881339d1edee6b2652f54798c0f4da5a827f2db38a08ee31117783ce8
+	 81471889c77b2161a3e4dcdb1b2e6ca382e485766132d92d5fe1d7497e7dd2d9"
+	;;
+aarch64)
+	distfiles="https://github.com/ast-grep/ast-grep/releases/download/${version}/app-aarch64-unknown-linux-gnu.zip
+	 https://raw.githubusercontent.com/ast-grep/ast-grep/${_license_commit}/LICENSE>ast-grep-bin-${version}-LICENSE.txt"
+	checksum="b39cfbc58da4b869a88b8a4bc57bd5deb0d24541e704cf7c257da7b53ec81c8f
+	 81471889c77b2161a3e4dcdb1b2e6ca382e485766132d92d5fe1d7497e7dd2d9"
+	;;
+esac
+
+do_install() {
+	vbin ast-grep
+	vlicense "ast-grep-bin-${version}-LICENSE.txt" LICENSE
+}
