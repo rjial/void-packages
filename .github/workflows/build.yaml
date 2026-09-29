@@ -85,6 +85,12 @@ jobs:
     steps:
       - name: Prepare container
         run: |
+          # GH Actions runners' host kernel blocks unprivileged user
+          # namespaces via AppArmor by default; xbps-src's default chroot
+          # backend (uunshare) needs one to write /proc/self/uid_map, so
+          # lift the restriction (no-op where it doesn't apply, e.g.
+          # self-hosted runners)
+          [ -w /proc/sys/kernel/apparmor_restrict_unprivileged_userns ] && echo 0 > /proc/sys/kernel/apparmor_restrict_unprivileged_userns || true
           # switch to repo-ci mirror
           mkdir -p /etc/xbps.d && cp /usr/share/xbps.d/*-repository-*.conf /etc/xbps.d/
           sed -i 's|repo-default|repo-ci|g' /etc/xbps.d/*-repository-*.conf
