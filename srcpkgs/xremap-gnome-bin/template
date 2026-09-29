@@ -1,0 +1,33 @@
+# Template file for 'xremap-gnome-bin'
+pkgname=xremap-gnome-bin
+version=0.15.13
+revision=1
+archs="x86_64 aarch64"
+short_desc="Dynamic key remapper for X11 and Wayland (GNOME Wayland build)"
+maintainer="Rizal Abdul Basith <rizalabdulbasith@maxxitani.id>"
+license="MIT"
+homepage="https://github.com/xremap/xremap"
+changelog="https://github.com/xremap/xremap/releases"
+provides="xremap-${version}_${revision}"
+nostrip=yes
+noshlibprovides=yes
+
+case "$XBPS_TARGET_MACHINE" in
+x86_64*)
+	distfiles="https://github.com/xremap/xremap/releases/download/v${version}/xremap-linux-x86_64-gnome.zip
+	 https://raw.githubusercontent.com/xremap/xremap/v${version}/LICENSE>xremap-${version}-LICENSE.txt"
+	checksum="a2be5f98942cb64cff4dacc5da555e61a59758416370b91707a5bd5f106e5651
+	 60365594c733128ba50f05de00c4a6f07fed0a6e8bbd93817f39ded3980f7343"
+	;;
+aarch64*)
+	distfiles="https://github.com/xremap/xremap/releases/download/v${version}/xremap-linux-aarch64-gnome.zip
+	 https://raw.githubusercontent.com/xremap/xremap/v${version}/LICENSE>xremap-${version}-LICENSE.txt"
+	checksum="ef4474e5a9abddac431aadf6d377599151628b3226fc274658201d013e9381cd
+	 60365594c733128ba50f05de00c4a6f07fed0a6e8bbd93817f39ded3980f7343"
+	;;
+esac
+
+do_install() {
+	vbin xremap
+	vlicense "xremap-${version}-LICENSE.txt" LICENSE
+}
