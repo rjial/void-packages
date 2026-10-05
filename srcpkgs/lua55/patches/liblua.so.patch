@@ -9,17 +9,6 @@
  
  install: dummy
  	cd src && $(MKDIR) $(INSTALL_BIN) $(INSTALL_INC) $(INSTALL_LIB) $(INSTALL_MAN) $(INSTALL_LMOD) $(INSTALL_CMOD)
---- a/src/luaconf.h
-+++ b/src/luaconf.h
-@@ -239,7 +239,7 @@
- 
- #else			/* }{ */
- 
--#define LUA_ROOT	"/usr/local/"
-+#define LUA_ROOT	"/usr/"
- #define LUA_LDIR	LUA_ROOT "share/lua/" LUA_VDIR "/"
- #define LUA_CDIR	LUA_ROOT "lib/lua/" LUA_VDIR "/"
- 
 --- a/src/Makefile
 +++ b/src/Makefile
 @@ -33,6 +33,7 @@
@@ -43,11 +32,22 @@
  	$(AR) $@ $(BASE_O)
  	$(RANLIB) $@
  
-+$(LUA_SO): $(CORE_O) $(LIB_O)
++$(LUA_SO): $(BASE_O)
 +	$(CC) -shared -ldl -Wl,-soname,$(LUA_SO).$(V) -o $@.$(R) $? -lm $(MYLDFLAGS)
 +	ln -sf $(LUA_SO).$(R) $(LUA_SO).$(V)
 +	ln -sf $(LUA_SO).$(R) $(LUA_SO)
 +
  $(LUA_T): $(LUA_O) $(LUA_A)
  	$(CC) -o $@ $(LDFLAGS) $(LUA_O) $(LUA_A) $(LIBS)
+ 
+--- a/src/luaconf.h
++++ b/src/luaconf.h
+@@ -239,7 +239,7 @@
+ 
+ #else			/* }{ */
+ 
+-#define LUA_ROOT	"/usr/local/"
++#define LUA_ROOT	"/usr/"
+ #define LUA_LDIR	LUA_ROOT "share/lua/" LUA_VDIR "/"
+ #define LUA_CDIR	LUA_ROOT "lib/lua/" LUA_VDIR "/"
  

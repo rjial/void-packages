@@ -1,0 +1,20 @@
+# Template file for 'sfwbar'
+pkgname=sfwbar
+version=1.0_beta17
+revision=1
+build_style=meson
+# mpd/bsdctl/bluez/iwd dimatikan eksplisit: config/sfwbar/sfwbar.config di
+# dotfiles repo ini TIDAK pakai widget native mpd/bluez/iwd sama sekali (cmus
+# dibaca lewat scanner kustom, bukan modul mpd bawaan). nm (NetworkManager)
+# dibiarkan 'auto' krn mesin ini pakai NetworkManager.
+configure_args="-Dmpd=disabled -Dbsdctl=disabled -Dbluez=disabled -Diwd=disabled"
+hostmakedepends="pkg-config wayland-devel"
+makedepends="gtk+3-devel glib-devel json-c-devel gtk-layer-shell-devel
+ wayland-devel wayland-protocols pulseaudio-devel libxkbcommon-devel
+ alsa-lib-devel pipewire-devel"
+short_desc="Dynamic, highly configurable Wayland taskbar/panel"
+maintainer="Rizal Abdul Basith <rizalabdulbasith@maxxitani.id>"
+license="GPL-3.0-only"
+homepage="https://github.com/LBCrion/sfwbar"
+distfiles="https://github.com/LBCrion/sfwbar/archive/refs/tags/v${version}.tar.gz"
+checksum=a4915bc7dd0873c45d0d6b01b070e39a91fd16cfadf730d6a9e48db68a8cd09e

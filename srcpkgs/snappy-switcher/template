@@ -1,0 +1,35 @@
+# Template file for 'snappy-switcher'
+pkgname=snappy-switcher
+version=4.5.0
+revision=1
+_commit=e12ad51aca77e16913723769849804b2a1efb849
+archs="x86_64 aarch64"
+hostmakedepends="pkg-config wayland-devel"
+makedepends="wayland-devel cairo-devel pango-devel json-c-devel
+ libxkbcommon-devel glib-devel wayland-protocols librsvg-devel"
+short_desc="Alt+Tab / Cmd+Tab overlay switcher for Hyprland"
+maintainer="Rizal Abdul Basith <rizalabdulbasith@maxxitani.id>"
+license="GPL-3.0-only"
+homepage="https://github.com/OpalAayan/snappy-switcher"
+distfiles="https://github.com/OpalAayan/snappy-switcher/archive/${_commit}.tar.gz"
+checksum=53077bf74108cd0e3717b9ed794e90adf455707729171eff13b2a96df245ed6f
+wrksrc="snappy-switcher-${_commit}"
+
+# Tak ada tag rilis upstream (dipin ke commit tertentu via ${_commit}) dan tak
+# ada file LICENSE di repo walau README mengklaim GPL-3.0 — tak ada yg di-vlicense.
+
+# Upstream Makefile TIDAK menghormati $DESTDIR sama sekali (semua path instal
+# langsung pakai $(PREFIX) literal, dan SYSCONFDIR malah hardcode absolut
+# "/etc/xdg/snappy-switcher" tanpa $(PREFIX) sama sekali) — build_style=
+# gnu-makefile bawaan xbps-src TIDAK bisa dipakai apa adanya (ia akan menulis
+# ke /etc/xdg/snappy-switcher ASLI di masterdir chroot, bukan ke destdir).
+# do_build/do_install manual, override PREFIX *dan* SYSCONFDIR supaya
+# semuanya kena tanam ke bawah $DESTDIR.
+do_build() {
+	make ${makejobs}
+}
+do_install() {
+	make PREFIX="${DESTDIR}/usr" \
+	     SYSCONFDIR="${DESTDIR}/etc/xdg/snappy-switcher" \
+	     install
+}

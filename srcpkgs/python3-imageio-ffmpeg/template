@@ -1,0 +1,13 @@
+# Template file for 'python3-imageio-ffmpeg'
+pkgname=python3-imageio-ffmpeg
+version=0.6.0
+revision=1
+build_style=python3-pep517
+hostmakedepends="python3-setuptools python3-wheel"
+depends="python3"
+short_desc="FFMPEG wrapper for Python (imageio plugin)"
+maintainer="Rizal Abdul Basith <rizalabdulbasith@maxxitani.id>"
+license="BSD-2-Clause"
+homepage="https://github.com/imageio/imageio-ffmpeg"
+distfiles="${PYPI_SITE}/i/imageio-ffmpeg/imageio_ffmpeg-${version}.tar.gz"
+checksum=e2556bed8e005564a9f925bb7afa4002d82770d6b08825078b7697ab88ba1755

@@ -1,0 +1,38 @@
+# Template file for 'xremap-hypr-bin'
+pkgname=xremap-hypr-bin
+version=0.15.13
+revision=1
+archs="x86_64 aarch64"
+short_desc="Dynamic key remapper for X11 and Wayland (Hyprland build)"
+maintainer="Rizal Abdul Basith <rizalabdulbasith@maxxitani.id>"
+license="MIT"
+homepage="https://github.com/xremap/xremap"
+changelog="https://github.com/xremap/xremap/releases"
+nostrip=yes
+noshlibprovides=yes
+
+case "$XBPS_TARGET_MACHINE" in
+x86_64*)
+	distfiles="https://github.com/xremap/xremap/releases/download/v${version}/xremap-linux-x86_64-hypr.zip
+	 https://raw.githubusercontent.com/xremap/xremap/v${version}/LICENSE>xremap-${version}-LICENSE.txt"
+	checksum="14d0aff5d0425f0137524a7e7484b337d4c57df5f0fa491a71e032ac45d9a1fa
+	 60365594c733128ba50f05de00c4a6f07fed0a6e8bbd93817f39ded3980f7343"
+	;;
+aarch64*)
+	distfiles="https://github.com/xremap/xremap/releases/download/v${version}/xremap-linux-aarch64-hypr.zip
+	 https://raw.githubusercontent.com/xremap/xremap/v${version}/LICENSE>xremap-${version}-LICENSE.txt"
+	checksum="6a29c6cd339c90721f186405e140cb4a5d632fc201bc414bda5010e0e446965f
+	 60365594c733128ba50f05de00c4a6f07fed0a6e8bbd93817f39ded3980f7343"
+	;;
+esac
+
+do_install() {
+	# Dipasang sbg xremap-hypr (BUKAN xremap polos) supaya bisa berdampingan dgn
+	# xremap-gnome-bin yang sudah terpasang untuk sesi GNOME — keduanya menyalin
+	# binary bernama sama ("xremap") dari rilis upstream, jadi kalau dua-duanya
+	# dipasang sbg /usr/bin/xremap, xbps menolak install (file sudah dimiliki
+	# paket lain). Konsekuensi: config/hypr/hyprland.lua HARUS memanggil
+	# "xremap-hypr", bukan "xremap" polos.
+	vbin xremap xremap-hypr
+	vlicense "xremap-${version}-LICENSE.txt" LICENSE
+}

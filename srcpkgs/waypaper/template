@@ -1,0 +1,18 @@
+# Template file for 'waypaper'
+pkgname=waypaper
+version=2.9
+revision=1
+build_style=python3-pep517
+hostmakedepends="python3-setuptools python3-wheel"
+depends="python3-gobject python3-platformdirs python3-Pillow python3-imageio
+ python3-imageio-ffmpeg python3-screeninfo"
+short_desc="GUI wallpaper manager for Wayland compositors"
+maintainer="Rizal Abdul Basith <rizalabdulbasith@maxxitani.id>"
+license="GPL-3.0-or-later"
+homepage="https://github.com/anufrievroman/waypaper"
+distfiles="${PYPI_SITE}/w/waypaper/waypaper-${version}.tar.gz"
+checksum=e562591bb21afb6216b78150357a1f80f3dee88d5a957d3f6c5dd885fa0eda97
+
+post_install() {
+	vlicense LICENSE
+}
