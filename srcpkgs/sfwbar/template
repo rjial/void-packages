@@ -1,6 +1,9 @@
 # Template file for 'sfwbar'
 pkgname=sfwbar
-version=1.0_beta17
+# Tag upstream "v1.0_beta17" — underscore DITOLAK xbps-src di field version=
+# ("version contains invalid character: _", diverifikasi langsung saat build).
+# Diganti titik; distfiles di bawah tetap pakai nama tag asli apa adanya.
+version=1.0.beta17
 revision=1
 build_style=meson
 # mpd/bsdctl/bluez/iwd dimatikan eksplisit: config/sfwbar/sfwbar.config di
@@ -16,5 +19,7 @@ short_desc="Dynamic, highly configurable Wayland taskbar/panel"
 maintainer="Rizal Abdul Basith <rizalabdulbasith@maxxitani.id>"
 license="GPL-3.0-only"
 homepage="https://github.com/LBCrion/sfwbar"
-distfiles="https://github.com/LBCrion/sfwbar/archive/refs/tags/v${version}.tar.gz"
+distfiles="https://github.com/LBCrion/sfwbar/archive/refs/tags/v1.0_beta17.tar.gz"
 checksum=a4915bc7dd0873c45d0d6b01b070e39a91fd16cfadf730d6a9e48db68a8cd09e
+# Nama direktori di dalam tarball ikut tag asli (underscore), bukan ${version}
+wrksrc="sfwbar-1.0_beta17"
