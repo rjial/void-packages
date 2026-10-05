@@ -1,5 +1,6 @@
 V=%VER%
 R=%REL%
+
 prefix=/usr
 INSTALL_BIN=${prefix}/bin
 INSTALL_INC=${prefix}/include
@@ -14,7 +15,7 @@ includedir=${prefix}/include/lua${V}
 Name: Lua
 Description: An Extensible Extension Language
 Version: ${R}
-Requires: 
+Requires:
 Libs: -L${libdir} -llua${V}
 Libs.private: -lm -ldl
 Cflags: -I${includedir}
