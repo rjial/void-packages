@@ -1,6 +1,6 @@
 # Template file for 'vscode-bin'
 pkgname=vscode-bin
-version=1.139.1
+version=1.140.0
 revision=1
 archs="x86_64 aarch64"
 depends="alsa-lib gtk+3 gnupg libnotify libsecret libxkbfile libXScrnSaver
@@ -18,11 +18,11 @@ repository=nonfree
 case "$XBPS_TARGET_MACHINE" in
 x86_64)
 	distfiles="https://update.code.visualstudio.com/${version}/linux-x64/stable>vscode-bin-${version}_x64.tar.gz"
-	checksum=0c9cbcea070e9a0fc62de5c78fee01a80f8e32f78ada664d9731f6c517503b7e
+	checksum=d32031e9e213d59532af3cf32fcb8b357a1cdd10417967b4f5b5ba30436dc0dc
 	;;
 aarch64)
 	distfiles="https://update.code.visualstudio.com/${version}/linux-arm64/stable>vscode-bin-${version}_arm64.tar.gz"
-	checksum=d52334ecd0c7aa6b1b4bf3c3bdf16530a04bce013c95f106d372f65e0f6e5bc5
+	checksum=9609a7655c4bc2a101b343ff22aa91f6678b46d9565b914c0608bd7f2e577fa6
 	;;
 esac
 
