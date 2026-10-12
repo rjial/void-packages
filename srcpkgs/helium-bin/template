@@ -1,6 +1,6 @@
 # Template file for 'helium-bin'
 pkgname=helium-bin
-version=0.18.3.1
+version=0.19.2.1
 revision=1
 archs="x86_64 aarch64"
 depends="xdg-utils liberation-fonts-ttf libpulseaudio libva libXScrnSaver
@@ -21,13 +21,13 @@ case "$XBPS_TARGET_MACHINE" in
 x86_64)
 	distfiles="https://github.com/imputnet/helium-linux/releases/download/${version}/helium-bin_${version}-1_amd64.deb
 	 https://raw.githubusercontent.com/imputnet/helium-linux/${version}/LICENSE.ungoogled_chromium>helium-${version}-LICENSE.ungoogled_chromium.txt"
-	checksum="b7b345ddcf2dc81512583bf99508342e702a2bb168d8a5d670b2a3c0159a032e
+	checksum="794c2e7640c7682ec33aa05e5aff103e526a7ac2c9866b547ccedfd84ee2be1e
 	 9539b394e4179952698894bd62ef6566b6804ab0ff360dcf3a511cfaf7f78c4d"
 	;;
 aarch64)
 	distfiles="https://github.com/imputnet/helium-linux/releases/download/${version}/helium-bin_${version}-1_arm64.deb
 	 https://raw.githubusercontent.com/imputnet/helium-linux/${version}/LICENSE.ungoogled_chromium>helium-${version}-LICENSE.ungoogled_chromium.txt"
-	checksum="10aaa334e8dcb2b667ced39c4133f66c7867afbd5bc33492b12f54d5704d9b97
+	checksum="47eec2db1fc2c2c6f3f208998a69c1b5ffdb757e06f24f33f059e2943503fccf
 	 9539b394e4179952698894bd62ef6566b6804ab0ff360dcf3a511cfaf7f78c4d"
 	;;
 esac
