@@ -1,0 +1,21 @@
+# Template file for 'ytui-music'
+pkgname=ytui-music
+version=2.0.0rc1
+revision=1
+_tag=v2.0.0-rc1
+wrksrc="ytui-music-2.0.0-rc1"
+build_style=cargo
+make_install_args="--path front-end"
+hostmakedepends="pkg-config"
+makedepends="mpv-devel openssl-devel"
+depends="mpv youtube-dl"
+short_desc="Youtube client in terminal for music"
+maintainer="Rizal Abdul Basith <rizalabdulbasith@maxxitani.id>"
+license="GPL-2.0-only"
+homepage="https://github.com/sudipghimire533/ytui-music"
+distfiles="https://github.com/sudipghimire533/ytui-music/archive/refs/tags/${_tag}.tar.gz"
+checksum=c41296d1dcb90e0bebf697c5077ee02f7b61cbb800198f468f0698285b9fd042
+
+post_install() {
+	vlicense LICENSE.txt
+}
