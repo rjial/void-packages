@@ -9,6 +9,9 @@ maintainer="Rizal Abdul Basith <rizalgu4rd14n@gmail.com>"
 license="MIT"
 homepage="https://github.com/rjial/android-camera"
 changelog="https://raw.githubusercontent.com/rjial/android-camera/main/CHANGELOG.md"
+# The prebuilt .so links against libobs.so.0 (OBS 0.x ABI); Void ships OBS 32.x
+# which provides libobs.so.30. Rebuild against obs-devel is needed upstream.
+broken="prebuilt plugin links libobs.so.0 but Void provides libobs.so.30 (OBS 32.x); wait for upstream to release a rebuild"
 depends="acam>=${version} obs"
 distfiles="https://github.com/rjial/android-camera/releases/download/v${version}/acam-obs-plugin-${version}-linux-x86_64.tar.gz"
 checksum=5d6781d669f09a1a301e7fa9c1eae31b06ef837f6ca75b2688d6e0d8d8b91dad
