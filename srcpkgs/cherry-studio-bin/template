@@ -1,6 +1,6 @@
 # Template file for 'cherry-studio-bin'
 pkgname=cherry-studio-bin
-version=2.1.4
+version=2.1.6
 revision=1
 archs="x86_64 aarch64"
 depends="gtk+3 libnotify nss libXScrnSaver libXtst xdg-utils at-spi2-core
@@ -18,13 +18,13 @@ case "$XBPS_TARGET_MACHINE" in
 x86_64)
 	distfiles="https://github.com/CherryHQ/cherry-studio/releases/download/v${version}/Cherry-Studio-${version}-linux-x64.deb
 	 https://raw.githubusercontent.com/CherryHQ/cherry-studio/v${version}/LICENSE>cherry-studio-${version}-LICENSE.txt"
-	checksum="7e7ee60d17916d41ef43270464e38e909b7426ab28e5c3c4e5edd18784c095c2
+	checksum="e661b14829009eff0336051b00a52e49388327d0825f220ed0c33c2b04ebf504
 	 0d96a4ff68ad6d4b6f1f30f713b18d5184912ba8dd389f86aa7710db079abcb0"
 	;;
 aarch64)
 	distfiles="https://github.com/CherryHQ/cherry-studio/releases/download/v${version}/Cherry-Studio-${version}-linux-arm64.deb
 	 https://raw.githubusercontent.com/CherryHQ/cherry-studio/v${version}/LICENSE>cherry-studio-${version}-LICENSE.txt"
-	checksum="9885fa89c49fc14e674d010b195601a9c28915d2fa54e8982821fb68aefe0ff3
+	checksum="3c52f8ddbfd405d204d02a090a170f6f333bdd5cc5c9a07f14e402518051bf53
 	 0d96a4ff68ad6d4b6f1f30f713b18d5184912ba8dd389f86aa7710db079abcb0"
 	;;
 esac

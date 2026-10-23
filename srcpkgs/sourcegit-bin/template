@@ -1,6 +1,6 @@
 # Template file for 'sourcegit-bin'
 pkgname=sourcegit-bin
-version=2026.21
+version=2026.22
 revision=1
 archs="x86_64 aarch64"
 depends="libX11 libICE libSM icu xdg-utils"
@@ -19,13 +19,13 @@ case "$XBPS_TARGET_MACHINE" in
 x86_64)
 	distfiles="https://github.com/sourcegit-scm/sourcegit/releases/download/v${version}/sourcegit_${version}-${_debrev}_amd64.deb
 	 https://raw.githubusercontent.com/sourcegit-scm/sourcegit/v${version}/LICENSE>sourcegit-${version}-LICENSE.txt"
-	checksum="cb7d1ce770d76483c999a9e81c871724ed47f55fa4600f829773485e03a926a6
+	checksum="dfe0532f538ed368638b4e8d3e6482c6e1048bfaac8a23f5e5975e7eb883d0b7
 	 ec746490472d7ae4317d257df27ea8077f68c6079b07f8ff32ac6ae12db9f32f"
 	;;
 aarch64)
 	distfiles="https://github.com/sourcegit-scm/sourcegit/releases/download/v${version}/sourcegit_${version}-${_debrev}_arm64.deb
 	 https://raw.githubusercontent.com/sourcegit-scm/sourcegit/v${version}/LICENSE>sourcegit-${version}-LICENSE.txt"
-	checksum="957b47a8baa4c6ec98f328da37a7066e8c3d584f6c7b14779d43783b590b11fe
+	checksum="f44294bcadea978658ab28de563bcbd5190dbfffa8ef84589cd1a2d6a1ab7796
 	 ec746490472d7ae4317d257df27ea8077f68c6079b07f8ff32ac6ae12db9f32f"
 	;;
 esac
