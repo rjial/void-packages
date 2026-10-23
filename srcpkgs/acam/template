@@ -1,0 +1,20 @@
+# Template file for 'acam'
+pkgname=acam
+version=0.1.0
+revision=1
+archs="x86_64"
+build_style=fetch
+short_desc="Use an Android phone camera as a Linux webcam over Wi-Fi or USB"
+maintainer="Rizal Abdul Basith <rizalgu4rd14n@gmail.com>"
+license="MIT"
+homepage="https://github.com/rjial/android-camera"
+changelog="https://raw.githubusercontent.com/rjial/android-camera/main/CHANGELOG.md"
+depends="v4l2loopback vulkan-loader libXcursor libXrandr libXi libxkbcommon-x11"
+distfiles="https://github.com/rjial/android-camera/releases/download/v${version}/acam-${version}-linux-x86_64.tar.gz"
+checksum=90be110417869c0c83ae69cdc4de4874dce4bab4c4f6ced1fa8cf8e8386163f1
+
+do_install() {
+	bsdtar -xf "${wrksrc}/acam-${version}-linux-x86_64.tar.gz" -C "${wrksrc}" --strip-components=1
+	vbin "${wrksrc}/acam"
+	vlicense "${wrksrc}/CHANGELOG.md" CHANGELOG.md
+}
