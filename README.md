@@ -29,6 +29,8 @@ release instead of building from source. They are not present in upstream
 | [`helium-bin`](./srcpkgs/helium-bin/template) | Helium, a privacy-first Chromium-based web browser | GPL-3.0-only, BSD-3-Clause | Repackages the official `.deb` release, installed to `/opt/helium` (matching [Ars-byte/Helium_xbps](https://github.com/Ars-byte/Helium_xbps)); trims `chromedriver`, non-English locales, and the software Vulkan fallback to save space; installs an AppArmor profile via `INSTALL`/`REMOVE` scripts when `apparmor` is present. The bundled Qt theming shims are excluded from automatic dependency detection (`skiprdeps`) so they don't drag in the full Qt5/Qt6 stacks as hard dependencies |
 | [`jdk21-temurin`](./srcpkgs/jdk21-temurin/template) | Eclipse Temurin 21 (OpenJDK 21 binaries by Eclipse Adoptium) | GPL-2.0-only WITH Classpath-exception-2.0 | Repackages the official Linux tarball release to `/usr/lib/jvm/temurin-21`, integrated with Void's native `alternatives` system (`jdk`/`java` groups, coexists with the source-built [`openjdk21`](./srcpkgs/openjdk21/template)) and `provides java-environment`/`java-runtime` so other packages can depend on "any JDK 21" |
 | [`jdk17-temurin`](./srcpkgs/jdk17-temurin/template) | Eclipse Temurin 17 (OpenJDK 17 binaries by Eclipse Adoptium) | GPL-2.0-only WITH Classpath-exception-2.0 | Same packaging approach as `jdk21-temurin`, targeting OpenJDK 17 (`/usr/lib/jvm/temurin-17`) |
+| [`acam`](./srcpkgs/acam/template) | ACAM — use an Android phone camera as a Linux webcam over Wi-Fi or USB | MIT | Repackages the official Linux x86_64 binary release; outputs to v4l2loopback; GUI (Vulkan + X11/Wayland) or `--headless` CLI; camera controls (ISO, shutter, focus, white balance, zoom); English and Indonesian UI |
+| [`acam-obs-plugin`](./srcpkgs/acam-obs-plugin/template) | OBS source plugin "ACAM Camera" — takes video from `acam` without v4l2loopback | MIT | Reads from a unix socket (`$XDG_RUNTIME_DIR/acam/video.sock`); multiple OBS sources supported simultaneously; installs English and Indonesian locale files; requires `acam` and `obs` |
 
 #### Building and installing
 
@@ -56,7 +58,7 @@ locations:
 sudo xbps-install \
   --repository="$(./xbps-src show-var XBPS_REPOSITORY)" \
   --repository="$(./xbps-src show-var XBPS_REPOSITORY)/nonfree" \
-  -y cherry-studio-bin sourcegit-bin opencode-desktop-bin pear-desktop-bin vscode-bin claude-desktop nerd-fonts-sf-mono zed helium-bin jdk21-temurin jdk17-temurin
+  -y cherry-studio-bin sourcegit-bin opencode-desktop-bin pear-desktop-bin vscode-bin claude-desktop nerd-fonts-sf-mono zed helium-bin jdk21-temurin jdk17-temurin acam acam-obs-plugin
 ```
 
 (list only the package names you actually want to install)
