@@ -1,0 +1,14 @@
+[Desktop Entry]
+Name=ACAM
+Name[id]=ACAM
+GenericName=Android Camera
+GenericName[id]=Kamera Android
+Comment=Use your Android phone camera as a Linux webcam over Wi-Fi or USB
+Comment[id]=Gunakan kamera HP Android sebagai webcam Linux lewat Wi-Fi atau kabel USB
+Exec=acam
+Icon=acam
+Terminal=false
+Type=Application
+Categories=Video;AudioVideo;Utility;
+Keywords=camera;webcam;android;streaming;v4l2;
+StartupNotify=true

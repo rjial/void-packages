@@ -16,5 +16,6 @@ checksum=90be110417869c0c83ae69cdc4de4874dce4bab4c4f6ced1fa8cf8e8386163f1
 do_install() {
 	bsdtar -xf "${wrksrc}/acam-${version}-linux-x86_64.tar.gz" -C "${wrksrc}" --strip-components=1
 	vbin "${wrksrc}/acam"
+	vinstall "${FILESDIR}/acam.desktop" 644 usr/share/applications
 	vlicense "${wrksrc}/CHANGELOG.md" CHANGELOG.md
 }
