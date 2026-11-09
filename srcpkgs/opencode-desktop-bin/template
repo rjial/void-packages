@@ -1,6 +1,6 @@
 # Template file for 'opencode-desktop-bin'
 pkgname=opencode-desktop-bin
-version=2.0.16
+version=2.2.6
 revision=1
 archs="x86_64 aarch64"
 depends="gtk+3 libnotify nss libXScrnSaver libXtst xdg-utils at-spi2-core
@@ -18,13 +18,13 @@ case "$XBPS_TARGET_MACHINE" in
 x86_64)
 	distfiles="https://opencode.ai/files/bin/${version}/opencode-desktop-linux-amd64.deb
 	 https://raw.githubusercontent.com/anomalyco/opencode/v${version}/LICENSE>opencode-desktop-${version}-LICENSE.txt"
-	checksum="55d6c0bcbc2a5726aeea4491fd50c37eac5a24828db7f2b4e91d950d3b2f5f71
+	checksum="87f66555f3a3fec3901ef7e1ac86f5e2deb55b90004cf42396e7547c6b195459
 	 625f0f619133f89bbbb2abe37369613dfa1885eba1e50d02170deb62bb42cb6b"
 	;;
 aarch64)
 	distfiles="https://opencode.ai/files/bin/${version}/opencode-desktop-linux-arm64.deb
 	 https://raw.githubusercontent.com/anomalyco/opencode/v${version}/LICENSE>opencode-desktop-${version}-LICENSE.txt"
-	checksum="51e080f010709f4168fa82b65f896e2d99474d8e9d9042f0f2a903e4ef61a740
+	checksum="f7f61294ff311e9f0ee0a283ab0065f34008fb5722300480345cda34765a7571
 	 625f0f619133f89bbbb2abe37369613dfa1885eba1e50d02170deb62bb42cb6b"
 	;;
 esac
